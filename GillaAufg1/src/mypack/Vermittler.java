@@ -1,7 +1,11 @@
 package mypack;
 
-//Datei: Vermittler.java
 public abstract class Vermittler {
-	// zur Information von Kollegen
-	public abstract void aenderungAufgetreten(Kollege kollege);
+
+	public abstract void vermitteln(Zuord z);
+	public abstract void vermitteln(Zuord z, Kollege k);
+	
+	public abstract void add(Kollege k);
+	public abstract void rem(Kollege k);
+	public abstract Boolean find(Kollege k);
 }
