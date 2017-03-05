@@ -140,11 +140,8 @@ public class KonkreterVermittler extends Vermittler {
 			/**
 			 * Zuordnung der Partnet-Objekte untereinander.
 			 */
-			ArrayList<Kollege> val = new ArrayList<>(moeglicheZuordnungen.get(besteI).getZuordnungen().values());
-			ArrayList<Kollege> key = new ArrayList<>(moeglicheZuordnungen.get(besteI).getZuordnungen().keySet());
-
-			for (int i = 0; i < val.size(); i++) {
-				((KonkreterStudi) val.get(i)).setPartner(key.get(i), true);
+			for (int i = 0; i < this.kollegen.size(); i++) {
+				((KonkreterStudi) this.kollegen.get(i)).setPartner(z.get(this.kollegen.get(i)), true);
 			}
 		} else {
 			/**
