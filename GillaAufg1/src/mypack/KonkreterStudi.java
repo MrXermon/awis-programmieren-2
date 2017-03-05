@@ -15,7 +15,7 @@ public class KonkreterStudi extends Kollege {
 	}
 
 	public void aktualisiert() {
-		
+
 	}
 
 	public String getName() {
@@ -54,11 +54,25 @@ public class KonkreterStudi extends Kollege {
 		this.aktualisiert();
 	}
 
-	public void setPartner(Kollege partner) {
+	/**
+	 * Methode zum Aktualisieren des Partners.
+	 * 
+	 * @param partner
+	 *            Uebergabe des Partners
+	 * @param b
+	 *            Moeglichkeit die Ausgabe zu unterdruecken
+	 * 
+	 */
+	public void setPartner(Kollege partner, Boolean b) {
 		this.partner = partner;
-		System.out.println("KonkreterStudi ist informiert, zugeteilter Partner von " + this.getName() + " ist: "
-				+ ((KonkreterStudi) this.getPartner()).getName());
+		if (!b)
+			System.out.println("KonkreterStudi ist informiert, zugeteilter Partner von " + this.getName() + " ist: "
+					+ ((KonkreterStudi) this.getPartner()).getName());
 		this.aktualisiert();
+	}
+
+	public void setPartner(Kollege partner) {
+		this.setPartner(partner, false);
 	}
 
 	public void setSkillInfo(int skillInfo) {
