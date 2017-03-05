@@ -3,9 +3,9 @@ package mypack;
 public class KonkreterStudi extends Kollege {
 
 	private String name;
+	private Kollege partner;
 	private int skillInfo;
 	private int skillMathe;
-	private Kollege partner;
 
 	public KonkreterStudi(Vermittler v, String n, int i, int m) {
 		super(v);
@@ -14,43 +14,27 @@ public class KonkreterStudi extends Kollege {
 		this.skillMathe = m;
 	}
 
-	public int getSkillInfo() {
-		return skillInfo;
-	}
-
-	public void setSkillInfo(int skillInfo) {
-		this.skillInfo = skillInfo;
-		this.aktualisiert();
-	}
-
-	public int getSkillMathe() {
-		return skillMathe;
-	}
-
-	public void setSkillMathe(int skillMathe) {
-		this.skillMathe = skillMathe;
-		this.aktualisiert();
+	public void aktualisiert() {
+		
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-		this.aktualisiert();
-	}
-
 	public Kollege getPartner() {
 		return partner;
 	}
 
-	public void setPartner(Kollege partner) {
-		this.partner = partner;
-		this.aktualisiert();
+	public int getSkillInfo() {
+		return skillInfo;
 	}
-	
-	public int nutzen(Kollege k){
+
+	public int getSkillMathe() {
+		return skillMathe;
+	}
+
+	public int nutzen(Kollege k) {
 		int nutzen = 0;
 		int mathe = ((KonkreterStudi) k).getSkillMathe() - ((KonkreterStudi) this).getSkillMathe();
 		int info = ((KonkreterStudi) k).getSkillInfo() - ((KonkreterStudi) this).getSkillInfo();
@@ -62,16 +46,33 @@ public class KonkreterStudi extends Kollege {
 			mathe = 0;
 
 		nutzen = mathe + info;
-		return nutzen;		
+		return nutzen;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		this.aktualisiert();
+	}
+
+	public void setPartner(Kollege partner) {
+		this.partner = partner;
+		System.out.println("KonkreterStudi ist informiert, zugeteilter Partner von " + this.getName() + " ist: "
+				+ ((KonkreterStudi) this.getPartner()).getName());
+		this.aktualisiert();
+	}
+
+	public void setSkillInfo(int skillInfo) {
+		this.skillInfo = skillInfo;
+		this.aktualisiert();
+	}
+
+	public void setSkillMathe(int skillMathe) {
+		this.skillMathe = skillMathe;
+		this.aktualisiert();
 	}
 
 	public String toString() {
-		return "[name=" + this.name + ", fitnessInf=" + this.skillInfo + ", fitnessMathe" + this.skillMathe + "]";
-	}
-
-	public void aktualisiert() {
-		System.out.println("KonkreterStudi ist informiert, zugeteilter Partner von " + this.getName() + " ist: "
-				+ ((KonkreterStudi) this.getPartner()).getName());
+		return "[name=" + this.name + ", fitnessInf=" + this.skillInfo + ", fitnessMathe=" + this.skillMathe + "]";
 	}
 
 	public void vermitteln(Zuord z) {

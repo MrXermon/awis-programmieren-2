@@ -1,6 +1,6 @@
 package mypack;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
 
@@ -56,21 +56,45 @@ public class Testfaelle {
 		v.vermitteln(z);
 		System.out.println();
 
-		System.out.println("Zuordnung: A zu " + ((KonkreterStudi) z.get(studi1)).getName() + "; B zu "
-				+ ((KonkreterStudi) z.get(studi2)).getName());
-		System.out.println("Gesamtnutzen: " + (studi1.nutzen(z.get(studi1)) + studi2.nutzen(z.get(studi2)) + studi3.nutzen(z.get(studi3)) + studi4.nutzen(z.get(studi4))));
-		// assertEquals(32, 0);
+		System.out.println("Gesamtnutzen: " + z.gesamtnutzen());
+		assertEquals(23, z.gesamtnutzen());
 		System.out.println("================================================================\n\n\n\n");
 	}
 
-	/*
-	 * @Test public void testFall3() { System.out.
-	 * println("========================== Testfall 3 =========================="
-	 * ); Random rand = new Random(123); for (int i = 0; i < 26; i++) v.add(new
-	 * KonkreterStudi(v, "" + (char) (i + 65), rand.nextInt(10),
-	 * rand.nextInt(10)));
-	 * 
-	 * System.out.println(
-	 * "================================================================"); }
-	 */
+	@Test
+	public void testFall3() {
+
+		System.out.println("========================== Testfall 3 ==========================");
+		Random rand = new Random(123);
+		for (int i = 0; i < 26; i++)
+			v.add(new KonkreterStudi(v, "" + (char) (i + 65), rand.nextInt(10), rand.nextInt(10)));
+
+		v.print();
+
+		v.vermitteln(z);
+		System.out.println();
+
+		System.out.println("Gesamtnutzen: " + z.gesamtnutzen());
+		assertEquals(117, z.gesamtnutzen());
+		System.out.println("================================================================");
+
+	}
+
+	@Test
+	public void testFall2Gilla() {
+		System.out.println("========================== Testfall 2 ==========================");
+
+		Random rand = new Random(123);
+		for (int i = 0; i < 4; i++)
+			v.add(new KonkreterStudi(v, "" + (char) (i + 65), rand.nextInt(10), rand.nextInt(10)));
+
+		v.print();
+
+		v.vermitteln(z);
+		System.out.println();
+
+		System.out.println("Gesamtnutzen: " + z.gesamtnutzen());
+		System.out.println("================================================================\n\n\n\n");
+	}
+
 }

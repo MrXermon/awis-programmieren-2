@@ -8,12 +8,12 @@ public abstract class Kollege {
 		this.vermittler = v;
 	}
 
-	public abstract void vermitteln(Zuord z);
-
 	public abstract void aktualisiert();
 
 	public Vermittler getVermittler() {
 		return vermittler;
 	}
+
+	public abstract void vermitteln(Zuord z);
 
 }
