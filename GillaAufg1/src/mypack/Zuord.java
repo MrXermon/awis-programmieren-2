@@ -1,9 +1,7 @@
 package mypack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.ListIterator;
 
 public class Zuord {
 
@@ -11,6 +9,13 @@ public class Zuord {
 
 	public Zuord() {
 		this.zuordnungen = new HashMap<>();
+	}
+
+	public void add(ArrayList<Kollege> l) {
+		for (int i = 0; i < l.size(); i += 2) {
+			this.add(l.get(i), l.get(i + 1));
+			this.add(l.get(i + 1), l.get(i));
+		}
 	}
 
 	public void add(Kollege a, Kollege b) {
@@ -49,11 +54,34 @@ public class Zuord {
 		}
 	}
 
+	public HashMap<Kollege, Kollege> getZuordnungen() {
+		return zuordnungen;
+	}
+
+	public void setZuordnungen(HashMap<Kollege, Kollege> zuordnungen) {
+		this.zuordnungen = zuordnungen;
+	}
+
 	public void print() {
 		System.out.println(this.zuordnungen);
 	}
-	
-	public void reset(){
+
+	public void print(Vermittler vv) {
+		ArrayList<Kollege> ausgegeben = new ArrayList<>();
+		KonkreterVermittler v = (KonkreterVermittler) vv;
+		for (Kollege k : v.getKollegen()) {
+			if (!ausgegeben.contains(k)) {
+				System.out.print(((KonkreterStudi) k).getName() + " zu "
+						+ ((KonkreterStudi) this.zuordnungen.get(k)).getName() + "; ");
+				ausgegeben.add(k);
+				ausgegeben.add(this.zuordnungen.get(k));
+			}
+			ausgegeben.add(k);
+		}
+		System.out.println();
+	}
+
+	public void reset() {
 		this.zuordnungen = new HashMap<>();
 	}
 

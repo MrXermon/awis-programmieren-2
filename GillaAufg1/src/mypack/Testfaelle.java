@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +17,12 @@ public class Testfaelle {
 	public void setUp() {
 		v = new KonkreterVermittler();
 		z = new Zuord();
+	}
+	
+	@After
+	public void setDown(){
+		System.out.println("================================================================");
+		System.out.println();
 	}
 
 	@Test
@@ -36,7 +43,6 @@ public class Testfaelle {
 		studi4.vermitteln(z);
 
 		assertEquals(studi1, z.get(studi4));
-		System.out.println("================================================================\n\n\n\n");
 	}
 
 	@Test
@@ -56,9 +62,11 @@ public class Testfaelle {
 		v.vermitteln(z);
 		System.out.println();
 
+		System.out.print("Zuordnung: ");
+		z.print(v);
+		
 		System.out.println("Gesamtnutzen: " + z.gesamtnutzen());
 		assertEquals(23, z.gesamtnutzen());
-		System.out.println("================================================================\n\n\n\n");
 	}
 
 	@Test
@@ -76,25 +84,6 @@ public class Testfaelle {
 
 		System.out.println("Gesamtnutzen: " + z.gesamtnutzen());
 		assertEquals(117, z.gesamtnutzen());
-		System.out.println("================================================================");
-
-	}
-
-	@Test
-	public void testFall2Gilla() {
-		System.out.println("========================== Testfall 2 ==========================");
-
-		Random rand = new Random(123);
-		for (int i = 0; i < 4; i++)
-			v.add(new KonkreterStudi(v, "" + (char) (i + 65), rand.nextInt(10), rand.nextInt(10)));
-
-		v.print();
-
-		v.vermitteln(z);
-		System.out.println();
-
-		System.out.println("Gesamtnutzen: " + z.gesamtnutzen());
-		System.out.println("================================================================\n\n\n\n");
 	}
 
 }
