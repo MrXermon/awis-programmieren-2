@@ -107,10 +107,10 @@ public class KonkreterVermittler extends Vermittler {
 	}
 
 	/**
-	 * Methode zum zuordnen aller am Vermittler registrierten Kollegen.
+	 * Methode zum Zuordnen aller am Vermittler registrierten Kollegen.
 	 * 
 	 * @param z
-	 *            Bojekt in denen alle Zuordnungen abschlieﬂend gespeichert
+	 *            Objekt in dem alle Zuordnungen abschlieﬂend gespeichert
 	 *            werden.
 	 */
 	public void vermitteln(Zuord z) {
@@ -165,17 +165,22 @@ public class KonkreterVermittler extends Vermittler {
 			}
 			z.setZuordnungen(moeglicheZuordnungen.get(besteI).getZuordnungen());
 
-			/**
-			 * Zuordnung der Partnet-Objekte untereinander.
-			 */
-			for (int i = 0; i < this.kollegen.size(); i++) {
-				((KonkreterStudi) this.kollegen.get(i)).setPartner(z.get(this.kollegen.get(i)), true);
-			}
 		} else {
 			/**
-			 * Tue was auch immer notwendig ist um eine Naeherungsloesing zu
-			 * bekommen.
+			 * Magie um die Naeherungsloesung zu erstellen. Leider aktuell nicht
+			 * funktionsfaehig, sodass einfch die Erstbesten Zuordnungen
+			 * erstellt werden.
 			 */
+			Zuord neu = new Zuord();
+			neu.add(this.getKollegen());
+			z.setZuordnungen(neu.getZuordnungen());
+		}
+
+		/**
+		 * Zuordnung der Partnet-Objekte untereinander.
+		 */
+		for (int i = 0; i < this.kollegen.size(); i++) {
+			((KonkreterStudi) this.kollegen.get(i)).setPartner(z.get(this.kollegen.get(i)), true);
 		}
 
 	}
