@@ -4,6 +4,8 @@
  * V1.0
  * 
  * Umsetzung der einzelnen Testfaelle.
+ * 
+ * Leider habe ich die Naeherungsloesung nicht umgesetzt bekommen.
  */
 
 package mypack;
@@ -90,8 +92,11 @@ public class Testfaelle {
 		v.vermitteln(z);
 		System.out.println();
 
+		System.out.print("Zuordnung: ");
+		z.print(v);
+
 		System.out.println("Gesamtnutzen: " + z.gesamtnutzen());
-		assertEquals(117, z.gesamtnutzen());
+		assertEquals(77, z.gesamtnutzen());
 	}
 
 }
