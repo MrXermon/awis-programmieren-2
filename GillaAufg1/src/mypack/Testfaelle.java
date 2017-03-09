@@ -1,3 +1,11 @@
+/**
+ * Jan Gilla
+ * 09.03.2017
+ * V1.0
+ * 
+ * Umsetzung der einzelnen Testfaelle.
+ */
+
 package mypack;
 
 import static org.junit.Assert.assertEquals;
@@ -18,9 +26,9 @@ public class Testfaelle {
 		v = new KonkreterVermittler();
 		z = new Zuord();
 	}
-	
+
 	@After
-	public void setDown(){
+	public void setDown() {
 		System.out.println("================================================================");
 		System.out.println();
 	}
@@ -64,7 +72,7 @@ public class Testfaelle {
 
 		System.out.print("Zuordnung: ");
 		z.print(v);
-		
+
 		System.out.println("Gesamtnutzen: " + z.gesamtnutzen());
 		assertEquals(23, z.gesamtnutzen());
 	}

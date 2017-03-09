@@ -1,16 +1,36 @@
+/**
+ * Jan Gilla
+ * 09.03.2017
+ * V1.0
+ * 
+ * Klasse zur Abbildung des Vermittlers.
+ */
+
 package mypack;
 
 import java.util.ArrayList;
 
 public class KonkreterVermittler extends Vermittler {
 
+	/**
+	 * Liste die alle am Vermittler registrierten Kollegen enth‰lt.
+	 */
 	private ArrayList<Kollege> kollegen;
 
+	/**
+	 * Konstruktor
+	 */
 	public KonkreterVermittler() {
 		super();
 		this.kollegen = new ArrayList<>();
 	}
 
+	/**
+	 * Kollegen am Vermittler registrieren.
+	 * 
+	 * @param k
+	 *            Kollege der am Vermittler registriert werden soll.
+	 */
 	public void add(Kollege k) {
 		if (!this.find(k))
 			this.kollegen.add(k);
@@ -26,6 +46,11 @@ public class KonkreterVermittler extends Vermittler {
 			return false;
 	}
 
+	/**
+	 * Methode zum Abrufen aller am Vermittler registrierten Kollegen.
+	 * 
+	 * @return Liste aller am Vermittler registrierten Kollegen.
+	 */
 	public ArrayList<Kollege> getKollegen() {
 		return kollegen;
 	}
@@ -36,8 +61,7 @@ public class KonkreterVermittler extends Vermittler {
 	 * 
 	 * Quelle: http://www.programcreek.com/2013/02/leetcode-permutations-java/
 	 * 
-	 * @param num
-	 * @return
+	 * @return Liste mit allen Permutationen der Zuordnungen,
 	 */
 	private ArrayList<ArrayList<Kollege>> kollegenPermutation() {
 		ArrayList<Kollege> num = this.kollegen;
@@ -58,9 +82,6 @@ public class KonkreterVermittler extends Vermittler {
 
 					ArrayList<Kollege> temp = new ArrayList<Kollege>(l);
 					current.add(temp);
-
-					// System.out.println(temp);
-
 					// - remove num[i] add
 					l.remove(j);
 				}
@@ -85,6 +106,13 @@ public class KonkreterVermittler extends Vermittler {
 		System.out.println("]");
 	}
 
+	/**
+	 * Methode zum zuordnen aller am Vermittler registrierten Kollegen.
+	 * 
+	 * @param z
+	 *            Bojekt in denen alle Zuordnungen abschlieﬂend gespeichert
+	 *            werden.
+	 */
 	public void vermitteln(Zuord z) {
 		z.reset();
 
@@ -148,11 +176,19 @@ public class KonkreterVermittler extends Vermittler {
 			 * Tue was auch immer notwendig ist um eine Naeherungsloesing zu
 			 * bekommen.
 			 */
-
 		}
 
 	}
 
+	/**
+	 * Zuordnung eines Kollegen zu dem Kollegen mit dem besten Gesamtnutzen.
+	 * 
+	 * @param k
+	 *            Kollege der Vermittelt werden soll.
+	 * @param z
+	 *            Zuordnungsobjekt, in dem die Zuordnungen abschlieﬂend
+	 *            gespeichert werden.
+	 */
 	public void vermitteln(Zuord z, Kollege k) {
 		/**
 		 * Sofern der Kollege noch nicht zugeweisen ist, wird er vermittelt.
