@@ -4,8 +4,6 @@
  * V1.0
  * 
  * Umsetzung der einzelnen Testfaelle.
- * 
- * Leider habe ich die Naeherungsloesung nicht umgesetzt bekommen.
  */
 
 package mypack;
@@ -96,7 +94,7 @@ public class Testfaelle {
 		z.print(v);
 
 		System.out.println("Gesamtnutzen: " + z.gesamtnutzen());
-		assertEquals(77, z.gesamtnutzen());
+		assertEquals(109, z.gesamtnutzen());
 	}
 
 }

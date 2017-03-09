@@ -167,13 +167,26 @@ public class KonkreterVermittler extends Vermittler {
 
 		} else {
 			/**
-			 * Magie um die Naeherungsloesung zu erstellen. Leider aktuell nicht
-			 * funktionsfaehig, sodass einfch die Erstbesten Zuordnungen
-			 * erstellt werden.
+			 * Fuer jeden Kollegen den besten Fall suchen und verwenden. Nicht
+			 * die Beste Loesung aber bringt immerhin ein relativ gutes Ergebnis
+			 * in relativ guter Zeit!
 			 */
-			Zuord neu = new Zuord();
-			neu.add(this.getKollegen());
-			z.setZuordnungen(neu.getZuordnungen());
+			for (Kollege k : this.kollegen) {
+				Kollege besterPartner = null;
+				int besterNutzen = 0;
+
+				if (!z.find(k)) {
+					for (Kollege j : this.kollegen) {
+						if (!z.find(j)
+								&& (((KonkreterStudi) k).nutzen(j) + ((KonkreterStudi) j).nutzen(k)) > besterNutzen) {
+							besterNutzen = ((KonkreterStudi) k).nutzen(j) + ((KonkreterStudi) j).nutzen(k);
+							besterPartner = j;
+						}
+					}
+					z.add(k, besterPartner);
+					z.add(besterPartner, k);
+				}
+			}
 		}
 
 		/**
