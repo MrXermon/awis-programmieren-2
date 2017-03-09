@@ -140,10 +140,10 @@ public class KonkreterStudi extends Kollege {
 	 * @param z
 	 *            Objekt in dem die Zuordnung gespeichert werden soll.
 	 */
-	public void vermitteln(Zuord z) {
+	public void zuteilen(Zuord z) {
 		System.out.println(
 				"KonkreterStudi " + this.getName() + " moechte zugeteilt werden und informiert den Vermittler");
-		this.getVermittler().vermitteln(z, this);
+		this.getVermittler().aenderungAufgetreten(this, z);
 	}
 
 }

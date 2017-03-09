@@ -31,7 +31,7 @@ public class KonkreterVermittler extends Vermittler {
 	 * @param k
 	 *            Kollege der am Vermittler registriert werden soll.
 	 */
-	public void add(Kollege k) {
+	public void registriereKollege(Kollege k) {
 		if (!this.find(k))
 			this.kollegen.add(k);
 	}
@@ -113,7 +113,7 @@ public class KonkreterVermittler extends Vermittler {
 	 *            Objekt in dem alle Zuordnungen abschlieﬂend gespeichert
 	 *            werden.
 	 */
-	public void vermitteln(Zuord z) {
+	public void zuteilen(Zuord z) {
 		z.reset();
 
 		/**
@@ -194,7 +194,7 @@ public class KonkreterVermittler extends Vermittler {
 	 *            Zuordnungsobjekt, in dem die Zuordnungen abschlieﬂend
 	 *            gespeichert werden.
 	 */
-	public void vermitteln(Zuord z, Kollege k) {
+	public void zuteilen(Zuord z, Kollege k) {
 		/**
 		 * Sofern der Kollege noch nicht zugeweisen ist, wird er vermittelt.
 		 */
@@ -244,6 +244,20 @@ public class KonkreterVermittler extends Vermittler {
 		} else {
 			System.out.println("Bereits zugeordnet!");
 		}
+	}
+
+	/**
+	 * Methode mit der der Kollege dem Vermittler mitteilt, dass er zugeordnet
+	 * werden will.
+	 * 
+	 * @param k
+	 *            Kollege, der zugeteilt werden will.
+	 * @param z
+	 *            Objekt in dem die Zuordnung gespeichert werden soll.
+	 */
+	public void aenderungAufgetreten(Kollege k, Zuord z) {
+		this.zuteilen(z, k);
+
 	}
 
 }

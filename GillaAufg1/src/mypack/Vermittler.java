@@ -10,9 +10,11 @@ package mypack;
 
 public abstract class Vermittler {
 
-	public abstract void vermitteln(Zuord z);
-	public abstract void vermitteln(Zuord z, Kollege k);
+	public abstract void zuteilen(Zuord z);
+	public abstract void zuteilen(Zuord z, Kollege k);
 	
-	public abstract void add(Kollege k);
+	public abstract void aenderungAufgetreten(Kollege k, Zuord z);
+	
+	public abstract void registriereKollege(Kollege k);
 	public abstract Boolean find(Kollege k);
 }

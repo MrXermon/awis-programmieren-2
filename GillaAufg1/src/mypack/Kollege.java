@@ -22,6 +22,6 @@ public abstract class Kollege {
 		return vermittler;
 	}
 
-	public abstract void vermitteln(Zuord z);
+	public abstract void zuteilen(Zuord z);
 
 }
