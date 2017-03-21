@@ -1,0 +1,9 @@
+- Teilweise fehlende Kommentare (-0,25)
+
+- Unnötige leere Methode namens ""aktualisiert"" in KonkreterStudi (-0,25)
+
+- Vermittler-Pattern nicht ganz korrekt umgesetzt (-1)
+
+- Die Kardinalitäten an der gerichteten Beziehung zwischen KonkreterStudi und Kollege sind nicht korrekt. Ein Kollege kann nur einem Studierenden zugeordnet werden. (-0,25)
+
+- Die Gerichtete Assoziation zwischen KonkreterVermittler und Kollege fehlt im UML-Diagramm (-0,25)
