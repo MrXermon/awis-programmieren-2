@@ -42,13 +42,20 @@ public class Nonogramm extends JFrame {
 		super("Nonogramm - Jan Gilla - awis TZ - SoSe 2017 - HS Mainz");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		this.setSize((groessenFaktor * (groesse + 1)), ((groessenFaktor * (groesse + 1)) + 50));
-
-		this.modell = new Modell(groesse);
-		this.buttonFeld = new JButton[groesse][groesse];
-
-		if (groesse == 4)
+		/**
+		 * Wenn als Groesse -1 gesetzt ist, wird das Beispiel geladen.
+		 */
+		if (groesse == -1) {
+			groesse = 4;
+			this.modell = new Modell(groesse);
+			this.buttonFeld = new JButton[groesse][groesse];
 			this.modell.beispielLaden();
+		} else {
+			this.modell = new Modell(groesse);
+			this.buttonFeld = new JButton[groesse][groesse];
+		}
+
+		this.setSize((groessenFaktor * (groesse + 1)), ((groessenFaktor * (groesse + 1)) + 50));
 
 		Container fensterInhalt = this.getContentPane();
 
@@ -108,6 +115,15 @@ public class Nonogramm extends JFrame {
 		menue.setLayout(new BorderLayout());
 
 		JButton checkButton = new JButton("Pruefe Loesung");
+		checkButton.addActionListener((e) -> {
+			Boolean status = this.modell.loesungChecken();
+			if (!status)
+				JOptionPane.showMessageDialog(this, this.modell.getFehlerText(), "Gepruefte Loesung",
+						JOptionPane.INFORMATION_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(this, "Alles richtig!", "Gepruefte Loesung",
+						JOptionPane.INFORMATION_MESSAGE);
+		});
 		menue.add((Component) checkButton, "East");
 
 		/**
@@ -115,13 +131,17 @@ public class Nonogramm extends JFrame {
 		 */
 		JButton neuButton = new JButton("Neues Spiel");
 		neuButton.addActionListener(e -> {
-			String rueckgabe = JOptionPane.showInputDialog(this, "Bitte Groesse des Quadrats eingeben: ");
+			String rueckgabe = JOptionPane.showInputDialog(this, "Bitte Groesse des Quadrats eingeben: ",
+					this.buttonFeld.length);
 			if (rueckgabe != null) {
 				try {
 					int r = Integer.parseInt(rueckgabe);
 					this.dispose();
 					new Nonogramm(r);
 				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(this,
+							"Leider konnte die Eingabe nicht in eine Zahl umgewandelt werden.", "Fehler",
+							JOptionPane.INFORMATION_MESSAGE);
 					System.err.println("Fehler beim Umwandeln der Eingabe \"" + rueckgabe + "\" in eine Ganzzahl.");
 				}
 			}
@@ -144,7 +164,7 @@ public class Nonogramm extends JFrame {
 	 * Konstruktor zum Erstellen des vorgegebenen Beispiels.
 	 */
 	public Nonogramm() {
-		this(4);
+		this(-1);
 	}
 
 	public static void main(String[] args) {

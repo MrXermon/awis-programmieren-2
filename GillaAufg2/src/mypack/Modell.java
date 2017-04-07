@@ -6,6 +6,7 @@ public class Modell {
 	private Status[][] feld;
 	private int[][] vorgabeZeile;
 	private int[][] vorgabeSpalte;
+	private String fehlerText;
 
 	public Modell(int m) {
 		this.MAX = m;
@@ -21,10 +22,7 @@ public class Modell {
 
 		this.vorgabeZeile = new int[m][m];
 		this.vorgabeSpalte = new int[m][m];
-	}
-
-	public Modell() {
-		this(3);
+		this.fehlerText = "";
 	}
 
 	public String toString() {
@@ -47,6 +45,159 @@ public class Modell {
 
 	public void setStatus(int x, int y, Status s) {
 		this.feld[x][y] = s;
+	}
+
+	public boolean loesungChecken() {
+		this.fehlerText = "";
+		Boolean status = true;
+
+		/**
+		 * Statusfeld in ein neues Feld duplizieren.
+		 */
+		Status[][] neuesFeld = new Status[this.MAX][this.MAX];
+
+		neuesFeld = this.feldKopie();
+
+		/**
+		 * Zeile einzeln kontrollieren.
+		 */
+		int i = 0;
+		while (i < this.MAX && status) {
+			int j = 0;
+			/**
+			 * Ueber alle Vorgaben fuer die einzelne Zeile laufen.
+			 */
+			while (j < this.MAX && this.vorgabeZeile[i][j] > 0 && status) {
+				int ergebnis = this.zeileSuchen(i, this.vorgabeZeile[i][j]);
+				/**
+				 * Pruefen ob Muster in der Zeile vorhanden ist.
+				 */
+				if (ergebnis > -1) {
+					for (int k = ergebnis; k < this.MAX; k++) {
+						neuesFeld[i][k] = null;
+					}
+				} else {
+					status = false;
+					this.fehlerText += "Fehler in Zeile " + i + "\n";
+				}
+				j++;
+			}
+			i++;
+		}
+
+		neuesFeld = this.feldKopie();
+
+		/**
+		 * Spalten einzeln kontrollieren.
+		 */
+		i = 0;
+		while (i < this.MAX && status) {
+			int j = 0;
+			/**
+			 * Ueber alle Vorgaben fuer die einzelne Spalte laufen.
+			 */
+			while (j < this.MAX && this.vorgabeSpalte[i][j] > 0 && status) {
+				int ergebnis = this.spalteSuchen(i, this.vorgabeSpalte[i][j]);
+				/**
+				 * Pruefen ob Muster in der Spalte vorhanden ist.
+				 */
+				if (ergebnis > -1) {
+					for (int k = ergebnis; k < this.MAX; k++) {
+						neuesFeld[k][i] = null;
+					}
+				} else {
+					status = false;
+					this.fehlerText += "Fehler in Spalte " + i + "\n";
+				}
+				j++;
+			}
+			i++;
+		}
+		return status;
+
+	}
+
+	private Status[][] feldKopie() {
+		Status[][] neuesFeld = new Status[this.MAX][this.MAX];
+		for (int x = 0; x < this.MAX; x++) {
+			for (int y = 0; y < this.MAX; y++) {
+				neuesFeld[x][y] = this.feld[x][y];
+			}
+		}
+		return neuesFeld;
+	}
+
+	private int zeileSuchen(int zeile, int suchwert) {
+		int startwert = -1;
+		int zaehler = 0;
+
+		Boolean gefunden = false;
+
+		int i = 0;
+		while (i < this.MAX && !gefunden) {
+			if (this.feld[zeile][i] == Status.SCHWARZ) {
+				if (startwert > -1) {
+					zaehler++;
+				} else {
+					startwert = i;
+					zaehler++;
+				}
+			} else {
+				startwert = -1;
+				zaehler = 0;
+			}
+
+			if (suchwert == zaehler)
+				gefunden = true;
+
+			i++;
+		}
+
+		if (gefunden)
+			return startwert;
+		else
+			return -1;
+	}
+
+	private int spalteSuchen(int spalte, int suchwert) {
+		int startwert = -1;
+		int zaehler = 0;
+
+		Boolean gefunden = false;
+
+		int i = 0;
+		while (i < this.MAX && !gefunden) {
+			if (this.feld[i][spalte] == Status.SCHWARZ) {
+				if (startwert > -1) {
+					zaehler++;
+				} else {
+					startwert = i;
+					zaehler++;
+				}
+			} else {
+				startwert = -1;
+				zaehler = 0;
+			}
+
+			if (suchwert == zaehler)
+				gefunden = true;
+
+			i++;
+		}
+
+		if (gefunden)
+			return startwert;
+		else
+			return -1;
+	}
+
+	/**
+	 * Methode zur Rueckgabe des Fehlertextes nach dem Ueberpruefen der Loesung.
+	 * 
+	 * @return Fehlertext
+	 */
+	public String getFehlerText() {
+		return this.fehlerText;
 	}
 
 	/**
