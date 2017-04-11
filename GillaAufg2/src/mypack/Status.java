@@ -9,5 +9,5 @@
 package mypack;
 
 public enum Status {
-	LEER, SCHWARZ, KREUZ;
+	KREUZ, LEER, SCHWARZ;
 }

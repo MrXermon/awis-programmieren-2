@@ -10,11 +10,11 @@ package mypack;
 
 public class Modell {
 
-	private int MAX;
-	private Status[][] feld;
-	private int[][] vorgabeZeile;
-	private int[][] vorgabeSpalte;
 	private String fehlerText;
+	private Status[][] feld;
+	private int MAX;
+	private int[][] vorgabeSpalte;
+	private int[][] vorgabeZeile;
 
 	public Modell(int m) {
 		this.MAX = m;
@@ -34,31 +34,90 @@ public class Modell {
 	}
 
 	/**
-	 * Ueberschreibung der toString Methode zur Ausgabe der aktuellen Felddaten
-	 * in der Konsole.
-	 * 
-	 * @return Felddaten in Textform.
+	 * Methode zum Setzen der Beispieldaten.
 	 */
-	public String toString() {
-		String ret = "";
+	public void beispielLaden() {
+		/**
+		 * Zeilenvorgaben
+		 */
+		this.vorgabeSpalte[0][0] = 1;
+		this.vorgabeSpalte[1][0] = 2;
+		this.vorgabeSpalte[2][0] = 2;
+		this.vorgabeSpalte[2][1] = 1;
+		this.vorgabeSpalte[3][0] = 1;
+
+		/**
+		 * Spaltenvorgaben
+		 */
+		this.vorgabeZeile[0][0] = 1;
+		this.vorgabeZeile[0][1] = 1;
+		this.vorgabeZeile[1][0] = 3;
+		this.vorgabeZeile[2][0] = 1;
+		this.vorgabeZeile[3][0] = 1;
+	}
+
+	/**
+	 * Methode zum Erstellen einer Kopie des Feldes Status.
+	 * 
+	 * @return Statusfeld
+	 */
+	private Status[][] feldKopie() {
+		Status[][] tmpFeld = new Status[this.MAX][this.MAX];
 		for (int x = 0; x < this.MAX; x++) {
 			for (int y = 0; y < this.MAX; y++) {
-				ret += this.feld[x][y];
-				if ((y + 1) != this.MAX)
-					ret += " ";
+				tmpFeld[x][y] = this.feld[x][y];
 			}
-			if ((x + 1) != this.MAX)
-				ret += "\r\n";
 		}
-		return ret;
+		return tmpFeld;
+	}
+
+	/**
+	 * Methode zur Rueckgabe des Fehlertextes nach dem Ueberpruefen der Loesung.
+	 * 
+	 * @return Fehlertext
+	 */
+	public String getFehlerText() {
+		return this.fehlerText;
 	}
 
 	public Status getStatus(int x, int y) {
 		return this.feld[x][y];
 	}
 
-	public void setStatus(int x, int y, Status s) {
-		this.feld[x][y] = s;
+	/**
+	 * Generierung der Spalten- und Zeilentitel.
+	 * 
+	 * @param t
+	 *            Umschalten Zwischen Spaltentitel (0) und Zeilentitel (1).
+	 * @param xy
+	 *            Nummer der Spalte / Zeile.
+	 * @return HTML-Text zur Weiterverwendung.
+	 */
+	public String getTitelFeld(int t, int xy) {
+		String r = "<html><body>";
+		if (t == 0) {
+			/**
+			 * Erstellen des Spaltentitels.
+			 * 
+			 * Hier wird noch ein <br />
+			 * am Ende zu viel ausgegeben.
+			 */
+			for (int i = 0; i < this.vorgabeSpalte[xy].length; i++) {
+				if (this.vorgabeSpalte[xy][i] > 0)
+					r += this.vorgabeSpalte[xy][i] + "<br />";
+			}
+		} else {
+			/**
+			 * Erstellen des Zeilentitels.
+			 */
+			for (int i = 0; i < this.vorgabeZeile[xy].length; i++) {
+				if (this.vorgabeZeile[xy][i] > 0)
+					r += this.vorgabeZeile[xy][i] + "  ";
+			}
+			r = r.trim();
+		}
+		r += "</body></html>";
+		return r;
 	}
 
 	/**
@@ -159,113 +218,8 @@ public class Modell {
 		return status;
 	}
 
-	/**
-	 * Methode zum Erstellen einer Kopie des Feldes Status.
-	 * 
-	 * @return Statusfeld
-	 */
-	private Status[][] feldKopie() {
-		Status[][] tmpFeld = new Status[this.MAX][this.MAX];
-		for (int x = 0; x < this.MAX; x++) {
-			for (int y = 0; y < this.MAX; y++) {
-				tmpFeld[x][y] = this.feld[x][y];
-			}
-		}
-		return tmpFeld;
-	}
-
-	private Boolean zeileValide(int zeile) {
-		int summe = 0;
-		int zaehler = 0;
-
-		int i = 0;
-		while (i < this.MAX && this.vorgabeZeile[zeile][i] > 0) {
-			summe += this.vorgabeZeile[zeile][i];
-			i++;
-		}
-
-		for (i = 0; i < this.MAX; i++) {
-			if (this.feld[zeile][i] == Status.SCHWARZ)
-				zaehler++;
-		}
-
-		if (zaehler == summe)
-			return true;
-		else
-			return false;
-	}
-
-	private Boolean spalteValide(int spalte) {
-		int summe = 0;
-		int zaehler = 0;
-
-		int i = 0;
-		while (i < this.MAX && this.vorgabeSpalte[spalte][i] > 0) {
-			summe += this.vorgabeSpalte[spalte][i];
-			i++;
-		}
-
-		for (i = 0; i < this.MAX; i++) {
-			if (this.feld[i][spalte] == Status.SCHWARZ)
-				zaehler++;
-		}
-
-		if (zaehler == summe)
-			return true;
-		else
-			return false;
-	}
-
-	/**
-	 * Methode zum Suchen der Anzahl der schwarzen Felder in einer Zeile.
-	 * 
-	 * @param zeile
-	 *            Zeile in der gesucht werden soll.
-	 * @param suchwert
-	 *            Hauefigkeit nach der gesucht werden soll.
-	 * @return Stelle an der das erste Zeichen der Folge gefunden wurde (-1,
-	 *         wenn nicht gefunden).
-	 */
-	private int zeileSuchen(int zeile, int suchwert) {
-		int startwert = -1;
-		int zaehler = 0;
-
-		Boolean gefunden = false;
-
-		int i = 0;
-		/**
-		 * Jeden Eintrag einer Zeile durchlaufen.
-		 */
-		while (i < this.MAX && !gefunden) {
-			/**
-			 * Wenn das Feld schwarz ist weiterzaehlen oder neu beginnen.
-			 */
-			if (this.feld[zeile][i] == Status.SCHWARZ) {
-				if (startwert > -1) {
-					zaehler++;
-				} else {
-					startwert = i;
-					zaehler++;
-				}
-			} else {
-				startwert = -1;
-				zaehler = 0;
-			}
-
-			/**
-			 * Ausbruch aus den Schleifen sobald die gewuenschte Anzahl an
-			 * Feldern gefunden ist.
-			 */
-			if (suchwert == zaehler)
-				gefunden = true;
-
-			i++;
-		}
-
-		if (gefunden)
-			return startwert;
-		else
-			return -1;
+	public void setStatus(int x, int y, Status s) {
+		this.feld[x][y] = s;
 	}
 
 	/**
@@ -321,71 +275,133 @@ public class Modell {
 	}
 
 	/**
-	 * Methode zur Rueckgabe des Fehlertextes nach dem Ueberpruefen der Loesung.
+	 * Pruefen ob die Anzahl der vorgegebenen Felder mit der Anzahl der in der
+	 * Spalte markierten uebereinstimmt.
 	 * 
-	 * @return Fehlertext
+	 * @param spalte
+	 *            Uebergabe der Spalte, die ueberprueft werden soll.
+	 * @return Richtig oder Falsch.
 	 */
-	public String getFehlerText() {
-		return this.fehlerText;
-	}
+	private Boolean spalteValide(int spalte) {
+		int summe = 0;
+		int zaehler = 0;
 
-	/**
-	 * Generierung der Spalten- und Zeilentitel.
-	 * 
-	 * @param t
-	 *            Umschalten Zwischen Spaltentitel (0) und Zeilentitel (1).
-	 * @param xy
-	 *            Nummer der Spalte / Zeile.
-	 * @return HTML-Text zur Weiterverwendung.
-	 */
-	public String getTitelFeld(int t, int xy) {
-		String r = "<html><body>";
-		if (t == 0) {
-			/**
-			 * Erstellen des Spaltentitels.
-			 * 
-			 * Hier wird noch ein <br />
-			 * am Ende zu viel ausgegeben.
-			 */
-			for (int i = 0; i < this.vorgabeSpalte[xy].length; i++) {
-				if (this.vorgabeSpalte[xy][i] > 0)
-					r += this.vorgabeSpalte[xy][i] + "<br />";
-			}
-		} else {
-			/**
-			 * Erstellen des Zeilentitels.
-			 */
-			for (int i = 0; i < this.vorgabeZeile[xy].length; i++) {
-				if (this.vorgabeZeile[xy][i] > 0)
-					r += this.vorgabeZeile[xy][i] + "  ";
-			}
-			r = r.trim();
+		int i = 0;
+		while (i < this.MAX && this.vorgabeSpalte[spalte][i] > 0) {
+			summe += this.vorgabeSpalte[spalte][i];
+			i++;
 		}
-		r += "</body></html>";
-		return r;
+
+		for (i = 0; i < this.MAX; i++) {
+			if (this.feld[i][spalte] == Status.SCHWARZ)
+				zaehler++;
+		}
+
+		if (zaehler == summe)
+			return true;
+		else
+			return false;
 	}
 
 	/**
-	 * Methode zum Setzen der Beispieldaten.
+	 * Ueberschreibung der toString Methode zur Ausgabe der aktuellen Felddaten
+	 * in der Konsole.
+	 * 
+	 * @return Felddaten in Textform.
 	 */
-	public void beispielLaden() {
-		/**
-		 * Zeilenvorgaben
-		 */
-		this.vorgabeSpalte[0][0] = 1;
-		this.vorgabeSpalte[1][0] = 2;
-		this.vorgabeSpalte[2][0] = 2;
-		this.vorgabeSpalte[2][1] = 1;
-		this.vorgabeSpalte[3][0] = 1;
+	public String toString() {
+		String ret = "";
+		for (int x = 0; x < this.MAX; x++) {
+			for (int y = 0; y < this.MAX; y++) {
+				ret += this.feld[x][y];
+				if ((y + 1) != this.MAX)
+					ret += " ";
+			}
+			if ((x + 1) != this.MAX)
+				ret += "\r\n";
+		}
+		return ret;
+	}
 
+	/**
+	 * Methode zum Suchen der Anzahl der schwarzen Felder in einer Zeile.
+	 * 
+	 * @param zeile
+	 *            Zeile in der gesucht werden soll.
+	 * @param suchwert
+	 *            Hauefigkeit nach der gesucht werden soll.
+	 * @return Stelle an der das erste Zeichen der Folge gefunden wurde (-1,
+	 *         wenn nicht gefunden).
+	 */
+	private int zeileSuchen(int zeile, int suchwert) {
+		int startwert = -1;
+		int zaehler = 0;
+
+		Boolean gefunden = false;
+
+		int i = 0;
 		/**
-		 * Spaltenvorgaben
+		 * Jeden Eintrag einer Zeile durchlaufen.
 		 */
-		this.vorgabeZeile[0][0] = 1;
-		this.vorgabeZeile[0][1] = 1;
-		this.vorgabeZeile[1][0] = 3;
-		this.vorgabeZeile[2][0] = 1;
-		this.vorgabeZeile[3][0] = 1;
+		while (i < this.MAX && !gefunden) {
+			/**
+			 * Wenn das Feld schwarz ist weiterzaehlen oder neu beginnen.
+			 */
+			if (this.feld[zeile][i] == Status.SCHWARZ) {
+				if (startwert > -1) {
+					zaehler++;
+				} else {
+					startwert = i;
+					zaehler++;
+				}
+			} else {
+				startwert = -1;
+				zaehler = 0;
+			}
+
+			/**
+			 * Ausbruch aus den Schleifen sobald die gewuenschte Anzahl an
+			 * Feldern gefunden ist.
+			 */
+			if (suchwert == zaehler)
+				gefunden = true;
+
+			i++;
+		}
+
+		if (gefunden)
+			return startwert;
+		else
+			return -1;
+	}
+
+	/**
+	 * Pruefen ob die Anzahl der vorgegebenen Felder mit der Anzahl der in der
+	 * Zeile markierten uebereinstimmt.
+	 * 
+	 * @param zeile
+	 *            Uebergabe der Zeile, die ueberprueft werden soll.
+	 * @return Richtig oder Falsch.
+	 */
+	private Boolean zeileValide(int zeile) {
+		int summe = 0;
+		int zaehler = 0;
+
+		int i = 0;
+		while (i < this.MAX && this.vorgabeZeile[zeile][i] > 0) {
+			summe += this.vorgabeZeile[zeile][i];
+			i++;
+		}
+
+		for (i = 0; i < this.MAX; i++) {
+			if (this.feld[zeile][i] == Status.SCHWARZ)
+				zaehler++;
+		}
+
+		if (zaehler == summe)
+			return true;
+		else
+			return false;
 	}
 
 }

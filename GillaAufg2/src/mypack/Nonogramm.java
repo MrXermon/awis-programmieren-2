@@ -34,11 +34,126 @@ import javax.swing.border.LineBorder;
  */
 public class Nonogramm extends JFrame {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Klasse zur Implementierung des ueberschriebenen MouseListeners.
+	 * 
+	 * @author gillaj
+	 *
+	 */
+	private class spielfeldButtonListener extends MouseAdapter {
+
+		/**
+		 * Methode, die beim Klick auf einen Button aufgerufen wird.
+		 * 
+		 * @param e:
+		 *            Uebergebene Eventinformationen
+		 */
+		public void mouseClicked(MouseEvent e) {
+			JButton button = (JButton) e.getComponent();
+			Modell m = Nonogramm.this.modell;
+			try {
+				String[] koord = button.getName().split(":");
+
+				int x = Integer.parseInt(koord[0]);
+				int y = Integer.parseInt(koord[1]);
+
+				switch (e.getButton()) {
+				/**
+				 * Linke Maustaste
+				 */
+				case 1:
+					/**
+					 * Schwarz und Weiﬂ umschalten. Kreuz wird ebenfalls zu
+					 * Schwarz.
+					 */
+					if (m.getStatus(x, y) == Status.SCHWARZ) {
+						m.setStatus(x, y, Status.LEER);
+						button.setBackground(Color.WHITE);
+						button.setText("");
+					} else {
+						m.setStatus(x, y, Status.SCHWARZ);
+						button.setBackground(Color.BLACK);
+						button.setText("");
+					}
+					break;
+				/**
+				 * Rechte Maustaste
+				 */
+				case 3:
+					/**
+					 * Kreuz und Leer umschalten.
+					 */
+					if (m.getStatus(x, y) == Status.KREUZ) {
+						m.setStatus(x, y, Status.LEER);
+						button.setBackground(Color.WHITE);
+						button.setText("");
+					} else {
+						m.setStatus(x, y, Status.KREUZ);
+						button.setBackground(Color.WHITE);
+						button.setText("X");
+					}
+					break;
+				}
+			} catch (Exception e2) {
+				System.err.println("Exeption beim Auslesen der x und y Koordinaten des gedrueckten Buttons.");
+			}
+		}
+
+	}
+	/**
+	 * Klasse zur Implementierung des ueberschriebenen ComponentAdapter zur
+	 * Anpassung der Schriftgroesse inerhalb des Spielfelds.
+	 * 
+	 * Quellen: http://stackoverflow.com/questions/2303305/window-resize-event,
+	 * http://docs.oracle.com/javase/6/docs/api/java/awt/event/ComponentAdapter.html
+	 * 
+	 * @author gillaj
+	 *
+	 */
+	private class spielfeldComponentAdapter extends ComponentAdapter {
+
+		/**
+		 * Methode am Listener, die bei einer Groessenaenderung des Fensters
+		 * aufgerufen wird.
+		 * 
+		 * @param e:
+		 *            Uebergebene Eventinformationen
+		 */
+		public void componentResized(ComponentEvent e) {
+			JButton[][] bf = Nonogramm.this.buttonFeld;
+			/**
+			 * Iteration und Anpassung der Schriftgroesse auf den einzelnen
+			 * Buttons durch Iteration uber das Array mit Feldern.
+			 */
+			for (int x = 0; x < bf.length; x++) {
+				for (int y = 0; y < bf[x].length; y++) {
+					/**
+					 * Vorgabe der neuen Groesse als Hoehe des Buttons / 2
+					 */
+					bf[x][y].setFont(new Font(null, Font.PLAIN, bf[x][y].getHeight() / 2));
+				}
+			}
+		}
+
+	}
+
 	private static int groessenFaktor = 100;
+	private static final long serialVersionUID = 1L;
+
+	public static void main(String[] args) {
+		new Nonogramm();
+	}
+
+	private JButton[][] buttonFeld;
 
 	private Modell modell;
-	private JButton[][] buttonFeld;
+
+	/**
+	 * Konstruktor zum Erstellen des vorgegebenen Beispiels.
+	 */
+	public Nonogramm() {
+		this(-1);
+	}
 
 	/**
 	 * Konstruktor zum Erstellen eines beliebigen Spiels.
@@ -167,121 +282,6 @@ public class Nonogramm extends JFrame {
 		 */
 		this.addComponentListener(new spielfeldComponentAdapter());
 		this.setVisible(true);
-	}
-
-	/**
-	 * Konstruktor zum Erstellen des vorgegebenen Beispiels.
-	 */
-	public Nonogramm() {
-		this(-1);
-	}
-
-	public static void main(String[] args) {
-		new Nonogramm();
-	}
-
-	/**
-	 * Klasse zur Implementierung des ueberschriebenen MouseListeners.
-	 * 
-	 * @author gillaj
-	 *
-	 */
-	private class spielfeldButtonListener extends MouseAdapter {
-
-		/**
-		 * Methode, die beim Klick auf einen Button aufgerufen wird.
-		 * 
-		 * @param e:
-		 *            Uebergebene Eventinformationen
-		 */
-		public void mouseClicked(MouseEvent e) {
-			JButton button = (JButton) e.getComponent();
-			Modell m = Nonogramm.this.modell;
-			try {
-				String[] koord = button.getName().split(":");
-
-				int x = Integer.parseInt(koord[0]);
-				int y = Integer.parseInt(koord[1]);
-
-				switch (e.getButton()) {
-				/**
-				 * Linke Maustaste
-				 */
-				case 1:
-					/**
-					 * Schwarz und Weiﬂ umschalten. Kreuz wird ebenfalls zu
-					 * Schwarz.
-					 */
-					if (m.getStatus(x, y) == Status.SCHWARZ) {
-						m.setStatus(x, y, Status.LEER);
-						button.setBackground(Color.WHITE);
-						button.setText("");
-					} else {
-						m.setStatus(x, y, Status.SCHWARZ);
-						button.setBackground(Color.BLACK);
-						button.setText("");
-					}
-					break;
-				/**
-				 * Rechte Maustaste
-				 */
-				case 3:
-					/**
-					 * Kreuz und Leer umschalten.
-					 */
-					if (m.getStatus(x, y) == Status.KREUZ) {
-						m.setStatus(x, y, Status.LEER);
-						button.setBackground(Color.WHITE);
-						button.setText("");
-					} else {
-						m.setStatus(x, y, Status.KREUZ);
-						button.setBackground(Color.WHITE);
-						button.setText("X");
-					}
-					break;
-				}
-			} catch (Exception e2) {
-				System.err.println("Exeption beim Auslesen der x und y Koordinaten des gedrueckten Buttons.");
-			}
-		}
-
-	}
-
-	/**
-	 * Klasse zur Implementierung des ueberschriebenen ComponentAdapter zur
-	 * Anpassung der Schriftgroesse inerhalb des Spielfelds.
-	 * 
-	 * Quellen: http://stackoverflow.com/questions/2303305/window-resize-event,
-	 * http://docs.oracle.com/javase/6/docs/api/java/awt/event/ComponentAdapter.html
-	 * 
-	 * @author gillaj
-	 *
-	 */
-	private class spielfeldComponentAdapter extends ComponentAdapter {
-
-		/**
-		 * Methode am Listener, die bei einer Groessenaenderung des Fensters
-		 * aufgerufen wird.
-		 * 
-		 * @param e:
-		 *            Uebergebene Eventinformationen
-		 */
-		public void componentResized(ComponentEvent e) {
-			JButton[][] bf = Nonogramm.this.buttonFeld;
-			/**
-			 * Iteration und Anpassung der Schriftgroesse auf den einzelnen
-			 * Buttons durch Iteration uber das Array mit Feldern.
-			 */
-			for (int x = 0; x < bf.length; x++) {
-				for (int y = 0; y < bf[x].length; y++) {
-					/**
-					 * Vorgabe der neuen Groesse als Hoehe des Buttons / 2
-					 */
-					bf[x][y].setFont(new Font(null, Font.PLAIN, bf[x][y].getHeight() / 2));
-				}
-			}
-		}
-
 	}
 
 }
