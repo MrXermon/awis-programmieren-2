@@ -1,3 +1,11 @@
+/**
+ * Jan Gilla
+ * 11.04.2017
+ * V1.0
+ * 
+ * Klasser zur Abbildung der grafischen Implementierung des Nonogramms.
+ */
+
 package mypack;
 
 import java.awt.BorderLayout;
@@ -62,8 +70,8 @@ public class Nonogramm extends JFrame {
 		/**
 		 * Erezugung des Spielfelds
 		 */
-		JPanel spielFeld = new JPanel();
-		spielFeld.setLayout(new GridLayout((groesse + 1), (groesse + 1), 0, 0));
+		JPanel spielPanel = new JPanel();
+		spielPanel.setLayout(new GridLayout((groesse + 1), (groesse + 1), 0, 0));
 
 		for (int x = 0; x < (groesse + 1); x++) {
 			for (int y = 0; y < (groesse + 1); y++) {
@@ -93,7 +101,7 @@ public class Nonogramm extends JFrame {
 						label.setText(this.modell.getTitelFeld(1, (x - 1)));
 					}
 
-					spielFeld.add(label);
+					spielPanel.add(label);
 				} else {
 					/**
 					 * Spielfeld
@@ -102,53 +110,54 @@ public class Nonogramm extends JFrame {
 					buttonFeld[x - 1][y - 1].setBackground(Color.WHITE);
 					buttonFeld[x - 1][y - 1].setName((x - 1) + ":" + (y - 1));
 					buttonFeld[x - 1][y - 1].addMouseListener(new spielfeldButtonListener());
-					spielFeld.add(buttonFeld[x - 1][y - 1]);
+					spielPanel.add(buttonFeld[x - 1][y - 1]);
 				}
 			}
 		}
-		fensterInhalt.add((Component) spielFeld, "Center");
+		fensterInhalt.add((Component) spielPanel, "Center");
 
 		/**
 		 * Erezugung des "Menus"
 		 */
-		JPanel menue = new JPanel();
-		menue.setLayout(new BorderLayout());
-
-		JButton checkButton = new JButton("Pruefe Loesung");
-		checkButton.addActionListener((e) -> {
-			Boolean status = this.modell.loesungChecken();
-			if (!status)
-				JOptionPane.showMessageDialog(this, this.modell.getFehlerText(), "Gepruefte Loesung",
-						JOptionPane.INFORMATION_MESSAGE);
-			else
-				JOptionPane.showMessageDialog(this, "Alles richtig!", "Gepruefte Loesung",
-						JOptionPane.INFORMATION_MESSAGE);
-		});
-		menue.add((Component) checkButton, "East");
+		JPanel menuePanel = new JPanel();
+		menuePanel.setLayout(new BorderLayout());
 
 		/**
-		 * Button zum Erstellen einer neuen Runde
+		 * Button zum Pruefen der durch den Anwender eingegebenen Loesung ueber
+		 * die im Modell erstellte Methode. Ausgabe des Status mittels
+		 * Textboxen.
+		 */
+		JButton pruefenButton = new JButton("Pruefe Loesung");
+		pruefenButton.addActionListener((e) -> {
+			if (this.modell.loesungChecken())
+				JOptionPane.showMessageDialog(this, "Alles ok!", "Loesung", JOptionPane.INFORMATION_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(this, this.modell.getFehlerText(), "Loesung", JOptionPane.ERROR_MESSAGE);
+		});
+		menuePanel.add((Component) pruefenButton, "East");
+
+		/**
+		 * Button zum Erstellen einer neuen Runde. Erzeugen eines Input-Dialogs
+		 * mit Umwandlung der Eingabe in eine Ganzzahl, wenn die Zahl
+		 * umgewandelt werden kann.
 		 */
 		JButton neuButton = new JButton("Neues Spiel");
 		neuButton.addActionListener(e -> {
-			String rueckgabe = JOptionPane.showInputDialog(this, "Bitte Groesse des Quadrats eingeben: ",
-					this.buttonFeld.length);
+			String rueckgabe = JOptionPane.showInputDialog(this, "Bitte Groesse des Quadrats eingeben:");
 			if (rueckgabe != null) {
 				try {
 					int r = Integer.parseInt(rueckgabe);
 					this.dispose();
 					new Nonogramm(r);
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(this,
-							"Leider konnte die Eingabe nicht in eine Zahl umgewandelt werden.", "Fehler",
-							JOptionPane.INFORMATION_MESSAGE);
-					System.err.println("Fehler beim Umwandeln der Eingabe \"" + rueckgabe + "\" in eine Ganzzahl.");
+					JOptionPane.showMessageDialog(this, "Das war doch keine Zahl, oder?", "Fehler",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		menue.add((Component) neuButton, "West");
+		menuePanel.add((Component) neuButton, "West");
 
-		fensterInhalt.add((Component) menue, "South");
+		fensterInhalt.add((Component) menuePanel, "South");
 
 		/**
 		 * Groessenveraenderung des Felds durch den ComponentAdapter erkennen.
@@ -242,6 +251,9 @@ public class Nonogramm extends JFrame {
 	 * Klasse zur Implementierung des ueberschriebenen ComponentAdapter zur
 	 * Anpassung der Schriftgroesse inerhalb des Spielfelds.
 	 * 
+	 * Quellen: http://stackoverflow.com/questions/2303305/window-resize-event,
+	 * http://docs.oracle.com/javase/6/docs/api/java/awt/event/ComponentAdapter.html
+	 * 
 	 * @author gillaj
 	 *
 	 */
@@ -258,7 +270,7 @@ public class Nonogramm extends JFrame {
 			JButton[][] bf = Nonogramm.this.buttonFeld;
 			/**
 			 * Iteration und Anpassung der Schriftgroesse auf den einzelnen
-			 * Feldern.
+			 * Buttons durch Iteration uber das Array mit Feldern.
 			 */
 			for (int x = 0; x < bf.length; x++) {
 				for (int y = 0; y < bf[x].length; y++) {
