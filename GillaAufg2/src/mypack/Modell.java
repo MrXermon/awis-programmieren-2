@@ -8,67 +8,175 @@
 
 package mypack;
 
+import java.util.Random;
+
 public class Modell {
 
 	private String fehlerText;
-	private Status[][] feld;
+	private Status[][] feldStatus;
 	private int MAX;
-	private int[][] vorgabeSpalte;
-	private int[][] vorgabeZeile;
+	private int[][] zeileVorgabe;
+	private int[][] spalteVorgabe;
 
+	/**
+	 * Konstruktor zum Anlegen eines Nonogramm-Modells.
+	 * 
+	 * @param m
+	 *            Groesse des Nonogramm-Modells.
+	 */
 	public Modell(int m) {
 		this.MAX = m;
-		this.feld = new Status[this.MAX][this.MAX];
+		this.feldStatus = new Status[this.MAX][this.MAX];
 
 		/**
 		 * Feld leer Initialisieren
 		 */
 		for (int x = 0; x < this.MAX; x++) {
 			for (int y = 0; y < this.MAX; y++)
-				this.feld[x][y] = Status.LEER;
+				this.feldStatus[x][y] = Status.LEER;
 		}
 
-		this.vorgabeZeile = new int[m][m];
-		this.vorgabeSpalte = new int[m][m];
+		this.spalteVorgabe = new int[m][m];
+		this.zeileVorgabe = new int[m][m];
 		this.fehlerText = "";
 	}
 
 	/**
 	 * Methode zum Setzen der Beispieldaten.
 	 */
-	public void beispielLaden() {
+	public void feldBeispiel() {
 		/**
 		 * Zeilenvorgaben
 		 */
-		this.vorgabeSpalte[0][0] = 1;
-		this.vorgabeSpalte[1][0] = 2;
-		this.vorgabeSpalte[2][0] = 2;
-		this.vorgabeSpalte[2][1] = 1;
-		this.vorgabeSpalte[3][0] = 1;
+		this.zeileVorgabe[0][0] = 1;
+		this.zeileVorgabe[1][0] = 2;
+		this.zeileVorgabe[2][0] = 2;
+		this.zeileVorgabe[2][1] = 1;
+		this.zeileVorgabe[3][0] = 1;
 
 		/**
 		 * Spaltenvorgaben
 		 */
-		this.vorgabeZeile[0][0] = 1;
-		this.vorgabeZeile[0][1] = 1;
-		this.vorgabeZeile[1][0] = 3;
-		this.vorgabeZeile[2][0] = 1;
-		this.vorgabeZeile[3][0] = 1;
+		this.spalteVorgabe[0][0] = 1;
+		this.spalteVorgabe[0][1] = 1;
+		this.spalteVorgabe[1][0] = 3;
+		this.spalteVorgabe[2][0] = 1;
+		this.spalteVorgabe[3][0] = 1;
 	}
 
 	/**
 	 * Methode zum Erstellen einer Kopie des Feldes Status.
 	 * 
-	 * @return Statusfeld
+	 * @return StatusfeldStatus
 	 */
 	private Status[][] feldKopie() {
 		Status[][] tmpFeld = new Status[this.MAX][this.MAX];
 		for (int x = 0; x < this.MAX; x++) {
 			for (int y = 0; y < this.MAX; y++) {
-				tmpFeld[x][y] = this.feld[x][y];
+				tmpFeld[x][y] = this.feldStatus[x][y];
 			}
 		}
 		return tmpFeld;
+	}
+
+	public void feldZufall() {
+		Random r = new Random(1);
+		Status[][] tempFeld = new Status[this.MAX][this.MAX];
+
+		/**
+		 * Zufaellige Belegung der Felder erfinden und dann daraus die vorgaben
+		 * generieren.
+		 */
+		for (int i = 0; i < this.MAX; i++) {
+			for (int j = 0; j < this.MAX; j++) {
+				int status = r.nextInt(2);
+				if (status == 0)
+					tempFeld[i][j] = Status.SCHWARZ;
+				else
+					tempFeld[i][j] = Status.LEER;
+			}
+		}
+
+		// this.feldStatus = tempFeld;
+
+		/**
+		 * Fuer jede Zeile die Muster erkennen und in die Vorgaben-Liste
+		 * uebernehmen.
+		 */
+		for (int i = 0; i < this.MAX; i++) {
+
+			int j = 0;
+			Status letzter = null;
+			int start = 0;
+			Boolean musterAktiv = false;
+			int musterZaehler = 0;
+
+			/**
+			 * Ueber Zei
+			 */
+			while (j < this.MAX) {
+				if ((letzter == null || letzter == Status.LEER) && tempFeld[j][i] == Status.SCHWARZ) {
+					start = j;
+					musterAktiv = true;
+				}
+
+				if (letzter == Status.SCHWARZ && tempFeld[j][i] == Status.LEER) {
+					musterAktiv = false;
+					this.zeileVorgabe[i][musterZaehler++] = (j - start);
+				}
+
+				letzter = tempFeld[j][i];
+				j++;
+			}
+
+			/**
+			 * Ende des letzten Musters wird nicht erkannt, deshalb getrennt
+			 * betrachten.
+			 */
+			if (musterAktiv) {
+				this.zeileVorgabe[i][musterZaehler++] = (j - start);
+			}
+		}
+
+		/**
+		 * Fuer jede Spalte die Muster erkennen und in die Vorgaben-Liste
+		 * uebernehmen.
+		 */
+		for (int i = 0; i < this.MAX; i++) {
+
+			int j = 0;
+			Status letzter = null;
+			int start = 0;
+			Boolean musterAktiv = false;
+			int musterZaehler = 0;
+
+			/**
+			 * Ueber Zei
+			 */
+			while (j < this.MAX) {
+				if ((letzter == null || letzter == Status.LEER) && tempFeld[i][j] == Status.SCHWARZ) {
+					start = j;
+					musterAktiv = true;
+				}
+
+				if (letzter == Status.SCHWARZ && tempFeld[i][j] == Status.LEER) {
+					musterAktiv = false;
+					this.spalteVorgabe[i][musterZaehler++] = (j - start);
+				}
+
+				letzter = tempFeld[i][j];
+				j++;
+			}
+
+			/**
+			 * Ende des letzten Musters wird nicht erkannt, deshalb getrennt
+			 * betrachten.
+			 */
+			if (musterAktiv) {
+				this.spalteVorgabe[i][musterZaehler++] = (j - start);
+			}
+		}
+
 	}
 
 	/**
@@ -81,7 +189,7 @@ public class Modell {
 	}
 
 	public Status getStatus(int x, int y) {
-		return this.feld[x][y];
+		return this.feldStatus[x][y];
 	}
 
 	/**
@@ -102,17 +210,17 @@ public class Modell {
 			 * Hier wird noch ein <br />
 			 * am Ende zu viel ausgegeben.
 			 */
-			for (int i = 0; i < this.vorgabeSpalte[xy].length; i++) {
-				if (this.vorgabeSpalte[xy][i] > 0)
-					r += this.vorgabeSpalte[xy][i] + "<br />";
+			for (int i = 0; i < this.zeileVorgabe[xy].length; i++) {
+				if (this.zeileVorgabe[xy][i] > 0)
+					r += this.zeileVorgabe[xy][i] + "<br />";
 			}
 		} else {
 			/**
 			 * Erstellen des Zeilentitels.
 			 */
-			for (int i = 0; i < this.vorgabeZeile[xy].length; i++) {
-				if (this.vorgabeZeile[xy][i] > 0)
-					r += this.vorgabeZeile[xy][i] + "  ";
+			for (int i = 0; i < this.spalteVorgabe[xy].length; i++) {
+				if (this.spalteVorgabe[xy][i] > 0)
+					r += this.spalteVorgabe[xy][i] + "  ";
 			}
 			r = r.trim();
 		}
@@ -131,7 +239,7 @@ public class Modell {
 		Boolean status = true;
 
 		/**
-		 * Statusfeld in ein neues Feld duplizieren.
+		 * StatusfeldStatus in ein neues Feld duplizieren.
 		 */
 		Status[][] tmpFeld = new Status[this.MAX][this.MAX];
 
@@ -154,8 +262,8 @@ public class Modell {
 			/**
 			 * Ueber alle Vorgaben fuer die einzelne Zeile laufen.
 			 */
-			while (j < this.MAX && this.vorgabeZeile[i][j] > 0 && status) {
-				int musterSuchen = this.zeileSuchen(i, this.vorgabeZeile[i][j]);
+			while (j < this.MAX && this.spalteVorgabe[i][j] > 0 && status) {
+				int musterSuchen = this.zeileSuchen(i, this.spalteVorgabe[i][j]);
 				/**
 				 * Pruefen ob Muster in der Zeile vorhanden ist.
 				 */
@@ -194,8 +302,8 @@ public class Modell {
 			/**
 			 * Ueber alle Vorgaben fuer die einzelne Spalte laufen.
 			 */
-			while (j < this.MAX && this.vorgabeSpalte[i][j] > 0 && status) {
-				int musterSuchen = this.spalteSuchen(i, this.vorgabeSpalte[i][j]);
+			while (j < this.MAX && this.zeileVorgabe[i][j] > 0 && status) {
+				int musterSuchen = this.spalteSuchen(i, this.zeileVorgabe[i][j]);
 				/**
 				 * Pruefen ob Muster in der Spalte vorhanden ist.
 				 */
@@ -219,7 +327,7 @@ public class Modell {
 	}
 
 	public void setStatus(int x, int y, Status s) {
-		this.feld[x][y] = s;
+		this.feldStatus[x][y] = s;
 	}
 
 	/**
@@ -246,7 +354,7 @@ public class Modell {
 			/**
 			 * Wenn das Feld schwarz ist weiterzaehlen oder neu beginnen.
 			 */
-			if (this.feld[i][spalte] == Status.SCHWARZ) {
+			if (this.feldStatus[i][spalte] == Status.SCHWARZ) {
 				if (startwert > -1) {
 					zaehler++;
 				} else {
@@ -287,13 +395,13 @@ public class Modell {
 		int zaehler = 0;
 
 		int i = 0;
-		while (i < this.MAX && this.vorgabeSpalte[spalte][i] > 0) {
-			summe += this.vorgabeSpalte[spalte][i];
+		while (i < this.MAX && this.zeileVorgabe[spalte][i] > 0) {
+			summe += this.zeileVorgabe[spalte][i];
 			i++;
 		}
 
 		for (i = 0; i < this.MAX; i++) {
-			if (this.feld[i][spalte] == Status.SCHWARZ)
+			if (this.feldStatus[i][spalte] == Status.SCHWARZ)
 				zaehler++;
 		}
 
@@ -309,11 +417,12 @@ public class Modell {
 	 * 
 	 * @return Felddaten in Textform.
 	 */
+	@Override
 	public String toString() {
 		String ret = "";
 		for (int x = 0; x < this.MAX; x++) {
 			for (int y = 0; y < this.MAX; y++) {
-				ret += this.feld[x][y];
+				ret += this.feldStatus[x][y];
 				if ((y + 1) != this.MAX)
 					ret += " ";
 			}
@@ -347,7 +456,7 @@ public class Modell {
 			/**
 			 * Wenn das Feld schwarz ist weiterzaehlen oder neu beginnen.
 			 */
-			if (this.feld[zeile][i] == Status.SCHWARZ) {
+			if (this.feldStatus[zeile][i] == Status.SCHWARZ) {
 				if (startwert > -1) {
 					zaehler++;
 				} else {
@@ -388,13 +497,13 @@ public class Modell {
 		int zaehler = 0;
 
 		int i = 0;
-		while (i < this.MAX && this.vorgabeZeile[zeile][i] > 0) {
-			summe += this.vorgabeZeile[zeile][i];
+		while (i < this.MAX && this.spalteVorgabe[zeile][i] > 0) {
+			summe += this.spalteVorgabe[zeile][i];
 			i++;
 		}
 
 		for (i = 0; i < this.MAX; i++) {
-			if (this.feld[zeile][i] == Status.SCHWARZ)
+			if (this.feldStatus[zeile][i] == Status.SCHWARZ)
 				zaehler++;
 		}
 
