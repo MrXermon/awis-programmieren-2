@@ -80,7 +80,7 @@ public class Modell {
 	}
 
 	public void feldZufall() {
-		Random r = new Random(1);
+		Random r = new Random();
 		Status[][] tempFeld = new Status[this.MAX][this.MAX];
 
 		/**
@@ -97,8 +97,6 @@ public class Modell {
 			}
 		}
 
-		// this.feldStatus = tempFeld;
-
 		/**
 		 * Fuer jede Zeile die Muster erkennen und in die Vorgaben-Liste
 		 * uebernehmen.
@@ -112,7 +110,7 @@ public class Modell {
 			int musterZaehler = 0;
 
 			/**
-			 * Ueber Zei
+			 * Jedes Muster in der Zeile erkennen und als Vorgabe speichern.
 			 */
 			while (j < this.MAX) {
 				if ((letzter == null || letzter == Status.LEER) && tempFeld[j][i] == Status.SCHWARZ) {
@@ -151,7 +149,7 @@ public class Modell {
 			int musterZaehler = 0;
 
 			/**
-			 * Ueber Zei
+			 * Jedes Muster in der Spalte erkennen und als Vorgabe speichern.
 			 */
 			while (j < this.MAX) {
 				if ((letzter == null || letzter == Status.LEER) && tempFeld[i][j] == Status.SCHWARZ) {
