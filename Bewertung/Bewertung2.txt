@@ -1,0 +1,2 @@
+- Namenskonventionen für Klassen nicht eingehalten. Auch innere Klassen werden groß geschrieben. (-0,5)
+- Zum Positionieren in einem BorderLayout sollten die Konstanten wie BorderLayout.EAST anstelle des String-Wertes verwendet werden. (-0,25)
